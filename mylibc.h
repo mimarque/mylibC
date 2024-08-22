@@ -1,5 +1,6 @@
 #ifndef MYLIBC_H
 #define MYLIBC_H
+#include <sys/types.h>
 
 // ctype.h
 int isalnum(int c);
@@ -12,5 +13,15 @@ int isgraph(int c);
 int islower(int c);
 int isprint(int c);
 int ispunct(int c);
+int isspace(int c);
+int isupper(int c);
+int isxdigit(int c);
+int tolower(int c);
+int toupper(int c);
+
+//string.h
+size_t strlen(const char *s);
+void* memset( void * ptr, int value, size_t num );
+void bzero(void *s, size_t n);
 
 #endif // MYLIBC_H

@@ -1,6 +1,8 @@
 #ifndef MYLIBC_H
 #define MYLIBC_H
 #include <sys/types.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
 // ctype.h
 int isalnum(int c);
@@ -23,5 +25,8 @@ int toupper(int c);
 size_t strlen(const char *s);
 void* memset( void * ptr, int value, size_t num );
 void bzero(void *s, size_t n);
+void* memcpy(void *dest, const void *src, size_t num);
+void* memmove(void *dest, const void *src, size_t num);
+void* fast_memcpy(void *dest, const void *src, size_t num);
 
 #endif // MYLIBC_H

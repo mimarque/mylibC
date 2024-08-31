@@ -1,137 +1,23 @@
 #include <stdio.h>
 #include <time.h>
 
-typedef long word;
 
-/// @brief          Copies n bytes from memory area src to memory area dest
-/// @param dest     Pointer to the destination array where the content is to be copied
-/// @param src      Pointer to the source of data to be copied
-/// @param n        Number of bytes to copy
-void big_memcpy(void *dest, const void *src, size_t n){
-    char *d = (char *)dest;
-    const char *s = (const char *)src;
-    size_t t;
-    unsigned long wsize = sizeof(word);
-    unsigned long wmask = (wsize - 1);
 
-    if ((dest == NULL || src == NULL) || (dest == src || n == 0)) return;
-    
-    if ((unsigned long)d < (unsigned long)s){ // Copy from lower addresses to higher addresses doing this to avoid overwriting data
-        t = (unsigned long)s;
-
-        // we want to copy the data in word size chunks so it's faster
-        // however, we need to check if the source and destination are aligned to the word size
-        // if they are not, we need to copy the data byte by byte
-        // in reality this only works if the adresses are minimally aligned with each other
-        //
-        // t:       0001 0000 0000 0011 (0x1003)
-        // d:     | 0010 0000 0000 0101 (0x2005)
-        // ---------------------------------------
-        //          0011 0000 0000 0111 (0x3007)
-        // wmask: & 0000 0000 0000 0111 (0x0007) assuming word size is 8 bytes
-        // ---------------------------------------
-        //          0000 0000 0000 0111 (0x0007)
-        //
-        // If the result is not zero, then the source and destination are not aligned to the word size
-        // this works because the alignment works out to (address mod word size) = 0
-        if ((t | (unsigned long)d) & wmask){
-            // the XOR will return 0 if the source and destination bits are the same
-            // if the soruce and destination are missaligned, ((t ^ d) & wmask) will return a non-zero value
-            // XOR'ing the source and destination will give us the difference between the two addresses
-            //
-            // t:       0001 0000 0000 0011
-            // d:     ^ 0010 0000 0000 0110
-            // ----------------------------
-            //          0011 0000 0000 0101
-            // wmask: & 0000 0000 0000 0111
-            // ----------------------------
-            //          0000 0000 0000 0101 the addresses are not aligned to the word boundary
-            //
-            // n is length of the data to be copied if the length is less than the word size we can only copy byte by byte
-            // if this condition is true, we can only copy byte by byte
-            if ((t ^ (unsigned long)d) & wmask || n < wsize){
-                t = n;
-            } else { // if it is false, src and dest can be aligned easily or are aligned, we can copy the data in word size chunks
-                t = wsize - (t & wmask); // determine how many bytes to copy to align the source
-            }
-            n -= t; // subtract the number of bytes to be copied from the total number of bytes to copy
-            do {
-                *d++ = *s++;
-            } while (--t); // --t > 0
-        }
-        t = n / wsize; // determine how many words to copy
-        if (t){
-            do {
-                *(word *)d = *(word *)s; // cast the source and destination to word and copy the data
-                d += wsize; // increment the destination by the word size note that the destination is a char pointer
-                s += wsize; // increment the source by the word size note that the source is a char pointer
-            } while (--t); // --t > 0
-        }
-        t = n & wmask; // determine how many bytes are left to copy same as t = n % wsize
-        if (t){
-            do {
-                *d++ = *s++; // copy the remaining bytes
-            } while (--t); // --t > 0
-        }
-    } else {
-        // basically the same as the above block but we copy from higher addresses to lower addresses
-        s += n;
-        d += n;
-        t = (unsigned long)s;
-        if ((t | (unsigned long)d) & wmask){
-            if ((t ^ (unsigned long)d) & wmask || n <= wsize){
-                t = n;
-            } else {
-                t &= wmask;
-            }
-            n -= t;
-            do {
-                *--d = *--s;
-            } while (--t);
-        }
-        t = n / wsize;
-        if (t){
-            do {
-                d -= wsize;
-                s -= wsize;
-                *(word *)d = *(word *)s;
-            } while (--t);
-        }
-        t = n & wmask;
-        if (t){
-            do {
-                *--d = *--s;
-            } while (--t);
-        }
-    }
+/// @brief      Returns the length of the given string
+/// @param s    The string to be measured
+/// @return     The length of the string
+size_t strlen(const char *s)
+{
+    size_t len = 0;
+    while (*s++)
+        len++;
+    return len;
 }
 
-/// @brief          Copies n bytes from memory area src to memory area dest
-/// @param dest     Pointer to the destination array where the content is to be copied
-/// @param src      Pointer to the source of data to be copied
-/// @param n        Number of bytes to copy
-void *memcpy(void *dest, const void *src, size_t n){
-    char *d = (char *)dest;
-    const char *s = (const char *)src;
-
-    if (dest == NULL || src == NULL || dest == src || n == 0) return dest;
-    if ((unsigned long)dest < (unsigned long)src){
-        do{
-            *d++ = *s++;
-        } while (--n);
-    } else {
-        s += n;
-        d += n;
-        do {
-            *--d = *--s;
-        } while (--n);
-    }
-    return dest;
-}
-
-//create memcmp function
 int memcmp(const void *ptr1, const void *ptr2, size_t num) {
-    const unsigned char *p1 = ptr1, *p2 = ptr2;
+    const unsigned char *p1 = ptr1;
+    const unsigned char *p2 = ptr2;
+    
     while(num--) {
         if(*p1 != *p2)
             return *p1 - *p2;
@@ -141,65 +27,120 @@ int memcmp(const void *ptr1, const void *ptr2, size_t num) {
     return 0;
 }
 
-//test memcpy in several ways
-//test higer and lower addresses
-//test long strings to test the speed of the function
-void test_memcpy(void) {
-    const char comp[64] = "This is a test string to test the speed of the memcpy function.";
-    char dest[64];
-    char dest2[64];
-    char dest3[64];
-    char src[64] = "This is a test string to test the speed of the memcpy function.";
-    char dest4[64];
-    char dest5[64];
-    char dest6[64];
-
-    //print addresses
-    printf("Address src: %p - %p\n", src, src + 64);
-    printf("Address dest: %p - %p\n", dest, dest + 64);
-    printf("Address dest2: %p - %p\n", dest2, dest2 + 64);
-    printf("Address dest3: %p - %p\n", dest3, dest3 + 64);
-    printf("Address dest4: %p - %p\n", dest4, dest4 + 64);
-    printf("Address dest5: %p - %p\n", dest5, dest5 + 64);
-    printf("Address dest6: %p - %p\n", dest6, dest6 + 64);
-
-    big_memcpy(dest, src, 64);
-    if(memcmp(dest, comp, 64) != 0)
-        printf("Test 1: Failed\nAddress src: %p - %p\nAddress dest: %p - %p", src, src + 64, dest, dest + 64);
-    big_memcpy(dest2, src, 64);
-    if(memcmp(dest2, comp, 64) != 0)
-        printf("Test 2: Failed\nAddress src: %p - %p\nAddress dest: %p - %p", src, src + 64, dest2, dest2 + 64);
-    big_memcpy(dest3, src, 64);
-    if(memcmp(dest3, comp, 64) != 0)
-        printf("Test 3: Failed\nAddress src: %p - %p\nAddress dest: %p - %p", src, src + 64, dest3, dest3 + 64);
-    big_memcpy(dest4, src, 64);
-    if(memcmp(dest4, comp, 64) != 0)
-        printf("Test 4: Failed\nAddress src: %p - %p\nAddress dest: %p - %p", src, src + 64, dest4, dest4 + 64);
-    big_memcpy(dest5, src, 64);
-    if(memcmp(dest5, comp, 64) != 0)
-        printf("Test 5: Failed\nAddress src: %p - %p\nAddress dest: %p - %p", src, src + 64, dest5, dest5 + 64);
-    big_memcpy(dest6, src, 64);
-    if(memcmp(dest6, comp, 64) != 0)
-        printf("Test 6: Failed\nAddress src: %p - %p\nAddress dest: %p - %p", src, src + 64, dest6, dest6 + 64);
+int strncmp(const char *s1, const char *s2, size_t n) {
+    if (s1 == NULL || s2 == NULL || n == 0) return -1;
+    
+    while (n--) {
+        if (*s1 != *s2) 
+            return *s1 - *s2;
+        if (*s1 == '\0') 
+            return 0;
+        s1++;
+        s2++;
+    }
+    //in case str in not null terminated
+    return -1;
 }
 
-void repeat_memcpy(void) {
-    for(int i = 0; i < 10000; i++) {
-        test_memcpy();
+/// @brief          Locates the first occurrence of the null-terminated string find in the null-terminated string s
+///                 NOTE: if find is an empty string, the function returns s
+///                 NOT MEMORY SAFE!!! STRINGS MUST BE NUL TERMINATED!
+/// @param s        Pointer to the null-terminated byte string to be analyzed
+/// @param find     Pointer to the null-terminated byte string to be searched for
+/// @return         A pointer to the located substring in the string, or a null pointer if the substring does not appear in the string
+char *strstr(const char *s, const char *find) {
+    size_t l1 = strlen(s);
+    size_t l2 = strlen(find);
+
+    if (l2 == 0) return NULL;
+
+    while (l1 >= l2) {
+        if (*s == *find)
+            if (!memcmp(s, find, l2))
+                return (char *) s;
+        s++;
+        l1--;
+    }
+    return NULL;
+}
+
+char *fast_strstr(const char *s, const char *find) {
+    char fc;
+    size_t len;
+
+    fc = *find++;
+    if (fc != 0) {
+        len = strlen(find);
+        do{
+            do {
+                if (*s == 0)
+                    return NULL;
+            } while (*s++ != fc);
+        } while (memcmp(s, find, len) != 0);
+        s--;
+    }
+    return (char *)s;
+}
+
+char *toofast_strstr(const char *s, const char *find) {
+    char c, sc;
+    size_t len;
+
+    if ((c = *find++) != 0) {
+        len = strlen(find);
+        do {
+            do {
+                if ((sc = *s++) == 0)
+                    return NULL;
+            } while (sc != c);
+        } while (strncmp(s, find, len) != 0);
+        s--;
+    }
+    return (char *)s;
+}
+
+/// test the strstr function  
+void test_strstr(int ver) {
+    const char *s = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
+                    "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. "
+                    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
+                    "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+    const char *find = "voluptate";
+    if (ver == 0) {
+        char *result = strstr(s, find);
+    } else if (ver == 1) {
+        char *result = fast_strstr(s, find);
+    } else if (ver == 2) {
+        char *result = toofast_strstr(s, find);
+    }
+    //printf("Result: %s\n", result);
+}
+
+void repeat_strstr(int ver) {
+    for(int i = 0; i < 100000; i++) {
+        test_strstr(ver);
     }
 }
 
 int main(void){
     clock_t start, end; //clock_t is a long int
     double cpu_time_used;
+    double average = 0;
 
-    start = clock();
-    //repeat_memcpy();
-    test_memcpy();
-    end = clock();
+    //try different versions of strstr
+    for (int j = 0; j < 3; j++) {
+        //make average of 100 runs
+        for (int i = 0; i < 100; i++) {
+            start = clock();
+            repeat_strstr(j);
+            end = clock();
 
-    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC; //CLOCKS_PER_SEC is 1000
-    printf("Time taken: %f\n", cpu_time_used);
+            cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC; //CLOCKS_PER_SEC is 1000
+            average += cpu_time_used;
+        }
+        printf("Average %d time taken: %f\n", j, average/100);
+    }
 
     return 0;
 }

@@ -21,12 +21,20 @@ int isxdigit(int c);
 int tolower(int c);
 int toupper(int c);
 
-//string.h
-size_t strlen(const char *s);
-void* memset( void * ptr, int value, size_t num );
+//stdlib.h
+void *calloc(size_t num, size_t size);
+
+//strings.h
 void bzero(void *s, size_t n);
-void* memcpy(void *dest, const void *src, size_t num);
-void* memmove(void *dest, const void *src, size_t num);
-void* fast_memcpy(void *dest, const void *src, size_t num);
+void *memccpy(void *dest, const void *src, int c, size_t n);
+void *memchr(const void *s, int c, size_t n);
+int memcmp(const void *ptr1, const void *ptr2, size_t num);
+void *memcpy(void *dest, const void *src, size_t n);
+void *memmove(void *dest, const void *src, size_t num);
+void *memset(void *s, int c, size_t n);
+
+//string.h
+
+
 
 #endif // MYLIBC_H

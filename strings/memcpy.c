@@ -15,7 +15,7 @@ void fast_memcpy(void *dest, const void *src, size_t n){
 
     if ((dest == NULL || src == NULL) || (dest == src || n == 0)) return;
     
-    if ((unsigned long)d < (unsigned long)s){ // Copy from lower addresses to higher addresses doing this to avoid overwriting data
+    if ((unsigned long)d < (unsigned long)s){ // No overlap
         t = (unsigned long)s;
 
         // we want to copy the data in word size chunks so it's faster
@@ -33,6 +33,7 @@ void fast_memcpy(void *dest, const void *src, size_t n){
         //
         // If the result is not zero, then the source and destination are not aligned to the word size
         // this works because the alignment works out to (address mod word size) = 0
+        // same as ((s_address % wordsize) != 0 || (d_address % wordsize) != 0)
         if ((t | (unsigned long)d) & wmask){
             // the XOR will return 0 if the source and destination bits are the same
             // if the soruce and destination are missaligned, ((t ^ d) & wmask) will return a non-zero value
@@ -48,12 +49,15 @@ void fast_memcpy(void *dest, const void *src, size_t n){
             //
             // n is length of the data to be copied if the length is less than the word size we can only copy byte by byte
             // if this condition is true, we can only copy byte by byte
+            // same as ((t_address % wsize) != (d_address % wsize)) || n < wsize
             if ((t ^ (unsigned long)d) & wmask || n < wsize){
                 t = n;
             } else { // if it is false, src and dest can be aligned easily or are aligned, we can copy the data in word size chunks
                 t = wsize - (t & wmask); // determine how many bytes to copy to align the source
             }
-            n -= t; // subtract the number of bytes to be copied from the total number of bytes to copy
+            n -= t; //  this is here to prevent the next if's from being executed
+                    //  meaning the data is all copied in this do-while loop below 
+                    //  subtract the number of bytes to be copied from the total number of bytes to copy
             do {
                 *d++ = *s++;
             } while (--t); // --t > 0

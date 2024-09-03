@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <limits.h>
 
 // ctype.h
 int isalnum(int c);
@@ -22,6 +23,10 @@ int tolower(int c);
 int toupper(int c);
 
 //stdlib.h
+long atol(const char *str);
+int atoi(const char *str);
+unsigned long atoul(const char *str);
+unsigned int atoui(const char *str);
 void *calloc(size_t num, size_t size);
 
 //strings.h
@@ -35,6 +40,12 @@ void *memset(void *s, int c, size_t n);
 
 //string.h
 
+
+//axiliary functions
+int hexvalue(char c);
+int count_digits(int value);
+int count_digits_in_base(int value, int base);
+//int count_digits_in_base_log(int value, int base); //needs #include <math.h> and uncomment
 
 
 #endif // MYLIBC_H

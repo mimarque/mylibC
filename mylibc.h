@@ -35,10 +35,23 @@ void *memccpy(void *dest, const void *src, int c, size_t n);
 void *memchr(const void *s, int c, size_t n);
 int memcmp(const void *ptr1, const void *ptr2, size_t num);
 void *memcpy(void *dest, const void *src, size_t n);
+void *fast_memcpy(void *dest, const void *src, size_t n);
 void *memmove(void *dest, const void *src, size_t num);
 void *memset(void *s, int c, size_t n);
 
 //string.h
+char *strchr(const char *s, int c);
+char *strcpy(char *dest, const char *src);
+char *strdup(const char *s);
+size_t strlcpy(char *dest, const char *src, size_t dstsize);
+size_t strlen(const char *s);
+size_t strnlen(const char *s, size_t maxlen);
+
+
+//non-standard functions
+void *fast_memcpy(void *dest, const void *src, size_t n);
+char *itoa(int value);
+char *uitoa(unsigned int value);
 
 
 //axiliary functions

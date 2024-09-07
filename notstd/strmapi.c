@@ -4,9 +4,9 @@
 /// @param s    The string to apply the function to
 /// @param f    The function to apply to each character
 /// @return     A new allocated string
-char *strmapi(const char *s, char (*f)(unsigned int, char)) {
-    size_t len = strlen(s);
-    char *result = calloc(len + 1, sizeof(char));
+char *my_strmapi(const char *s, char (*f)(unsigned int, char)) {
+    size_t len = my_strlen(s);
+    char *result = my_calloc(len + 1, sizeof(char));
     if (result == NULL)
         return NULL;
 

@@ -5,10 +5,10 @@
 /// @param start    The starting index of the substring
 /// @param len      The length of the substring
 /// @return         A pointer to the substring
-char *substr(const char *str, size_t start, size_t len) {
-    char *result = calloc(len + 1, sizeof(char));
+char *my_substr(const char *str, size_t start, size_t len) {
+    char *result = my_calloc(len + 1, sizeof(char));
     if (result == NULL)
         return NULL;
-    fast_memcpy(result, str + start, len);
+    my_fast_memcpy(result, str + start, len);
     return result;
 }

@@ -4,9 +4,9 @@
 /// @param value    Value to be converted to a string
 /// @return         A pointer to the resulting null-terminated string
 /// NOTE: The returned string is allocated with malloc and must be freed by the user
-char *itoa(int value) {
+char *my_itoa(int value) {
     int is_negative = value < 0;
-    int num_digits = count_digits(value);
+    int num_digits = my_count_digits(value);
 
     char *buf = malloc(num_digits + is_negative + 1);
     if (buf == NULL)
@@ -30,8 +30,8 @@ char *itoa(int value) {
     return buf;
 }
 
-char *uitoa(unsigned int value) {
-    int num_digits = count_digits(value);
+char *my_uitoa(unsigned int value) {
+    int num_digits = my_count_digits(value);
 
     char *buf = malloc(num_digits + 1);
     if (buf == NULL)
@@ -48,9 +48,9 @@ char *uitoa(unsigned int value) {
     return buf;
 }
 
-char *itoa_base(int value, int base) {
+char *my_itoa_base(int value, int base) {
     int is_negative = value < 0;
-    int num_digits = count_digits_in_base(value, base);
+    int num_digits = my_count_digits_in_base(value, base);
     int digit;
 
     char *buf = malloc(num_digits + is_negative + 1);
@@ -83,8 +83,8 @@ char *itoa_base(int value, int base) {
     return buf;
 }
 
-char *uitoa_base(unsigned int value, int base) {
-    int num_digits = count_digits_in_base(value, base);
+char *my_uitoa_base(unsigned int value, int base) {
+    int num_digits = my_count_digits_in_base(value, base);
     int digit;
 
     char *buf = malloc(num_digits + 1);

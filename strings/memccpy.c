@@ -8,7 +8,7 @@
 /// @param c    The character to be searched for
 /// @param n    The number of bytes to copy
 /// @return     A pointer to the next character in dst after c, or NULL if c was not found in the first n bytes of src
-void *memccpy(void *dst, const void *src, int c, size_t n) {
+void *my_memccpy(void *dst, const void *src, int c, size_t n) {
     unsigned char *d = (unsigned char *)dst;
     const unsigned char *s = (const unsigned char *)src;
     unsigned char uc = (unsigned char)c;

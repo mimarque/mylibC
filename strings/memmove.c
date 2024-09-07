@@ -11,9 +11,9 @@
 /// @param src      Pointer to the source of data to be copied
 /// @param num      Number of bytes to copy
 /// @return         A pointer to the destination
-void *memmove(void *dest, const void *src, size_t num) {
+void *my_memmove(void *dest, const void *src, size_t num) {
     if ((dest == NULL || src == NULL) || (dest == src) || (num == 0))
         return dest;
     
-    return fast_memcpy(dest, src, num); // this is a memory safe version of memcpy
+    return my_fast_memcpy(dest, src, num); // this is a memory safe version of memcpy
 }

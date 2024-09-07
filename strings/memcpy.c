@@ -6,7 +6,7 @@ typedef long word;
 /// @param dest     Pointer to the destination array where the content is to be copied
 /// @param src      Pointer to the source of data to be copied
 /// @param n        Number of bytes to copy
-void fast_memcpy(void *dest, const void *src, size_t n){
+void *my_fast_memcpy(void *dest, const void *src, size_t n){
     char *d = (char *)dest;
     const char *s = (const char *)src;
     size_t t;
@@ -113,7 +113,7 @@ void fast_memcpy(void *dest, const void *src, size_t n){
 /// @param dest     Pointer to the destination array where the content is to be copied
 /// @param src      Pointer to the source of data to be copied
 /// @param n        Number of bytes to copy
-void *memcpy(void *dest, const void *src, size_t n){
+void *my_memcpy(void *dest, const void *src, size_t n){
     char *d = (char *)dest;
     const char *s = (const char *)src;
 

@@ -3,6 +3,6 @@
 /// @brief      Check if the character is a printable character
 /// @param c    The character to check
 /// @return     Non-zero if the character is a printable character, 0 otherwise
-int isgraph(int c){
+int my_isgraph(int c){
     return c > ' ' && c < 127;
 }

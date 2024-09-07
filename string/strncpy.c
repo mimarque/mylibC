@@ -7,7 +7,7 @@
 /// @return         The destination string with the copied characters
 /// @note           If the length of src is less than n, the remaining characters in dest will be filled with NUL
 ///                 If the length of src is greater than or equal to n, the destination string will not be NUL-terminated   
-char *strncpy(char *dest, const char *src, size_t n) {
+char *my_strncpy(char *dest, const char *src, size_t n) {
     size_t i;
 
     for (i = 0; i < n && src[i] != '\0'; i++)

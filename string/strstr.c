@@ -6,15 +6,15 @@
 /// @param s        Pointer to the null-terminated byte string to be analyzed
 /// @param find     Pointer to the null-terminated byte string to be searched for
 /// @return         A pointer to the located substring in the string, or a null pointer if the substring does not appear in the string
-char *strstr(const char *s, const char *find) {
-    size_t l1 = strlen(s);
-    size_t l2 = strlen(find);
+char *my_strstr(const char *s, const char *find) {
+    size_t l1 = my_strlen(s);
+    size_t l2 = my_strlen(find);
 
     if (l2 == 0) return NULL;
 
     while (l1 >= l2) {
         if (*s == *find)
-            if (!memcmp(s, find, l2))
+            if (!my_memcmp(s, find, l2))
                 return (char *) s;
         s++;
         l1--;

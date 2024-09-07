@@ -5,10 +5,10 @@
 /// @param src      C string to be appended
 /// @return         A pointer to the resulting string dest
 /// @note           NOT SAFE! dest must be large enough to contain the concatenated resulting string
-char *strcat(char *dest, const char *src) {
-    size_t dest_len = strlen(dest);
-    size_t src_len = strlen(src);
+char *my_strcat(char *dest, const char *src) {
+    size_t dest_len = my_strlen(dest);
+    size_t src_len = my_strlen(src);
 
-    fast_memcpy(dest + dest_len, src, src_len + 1);
+    my_fast_memcpy(dest + dest_len, src, src_len + 1);
     return dest;
 }

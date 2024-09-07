@@ -8,7 +8,7 @@
 ///             A value different than zero indicates that the strings are different
 /// @note       NOT MEMORY SAFE!!! STRINGS MUST BE NUL TERMINATED!
 ///             This function does not check for null pointers
-int strcmp(const char *s1, const char *s2) {
+int my_strcmp(const char *s1, const char *s2) {
     while (*s1 && (*s1 == *s2)) {
         s1++;
         s2++;

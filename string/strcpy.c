@@ -5,7 +5,7 @@
 /// @param src      Pointer to the source of data to be copied
 /// @return         A pointer to the destination string dest
 /// NOT MEMORY SAFE!!! STRINGS MUST BE NUL TERMINATED!
-char *strcpy(char *dest, const char *src) {
+char *my_strcpy(char *dest, const char *src) {
     char *d = dest;
     const char *s = src;
 

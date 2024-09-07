@@ -5,7 +5,7 @@
 /// @param s    Pointer to the null-terminated byte string to be analyzed
 /// @param c    Character to be located
 /// @return     A pointer to the located character in the string, or a null pointer if the character does not appear in the string
-char *strchr(const char *s, int c) {
+char *my_strchr(const char *s, int c) {
     if (s == NULL) return NULL;
     while(true) {
         if(*s == c)

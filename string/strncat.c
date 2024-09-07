@@ -6,7 +6,7 @@
 /// @param src      C string to be appended
 /// @param n        The maximum number of characters to append
 /// @return         A pointer to the resulting string dest
-char *strncat(char *dest, const char *src, size_t n) {
+char *my_strncat(char *dest, const char *src, size_t n) {
     char *temp = dest;
 
     if (n > 0) {

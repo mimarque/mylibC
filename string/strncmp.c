@@ -8,7 +8,7 @@
 ///             A zero value indicates that the characters compared in both strings form the same string.
 ///             A value greater than zero indicates that the first character that does not match has a greater value in str1 than in str2
 ///             A value less than zero indicates the opposite
-int strncmp(const char *s1, const char *s2, size_t n) {
+int my_strncmp(const char *s1, const char *s2, size_t n) {
     while (n-- && *s1 && (*s1 == *s2)) {
         s1++;
         s2++;

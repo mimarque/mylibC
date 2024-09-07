@@ -6,12 +6,12 @@
 /// @param dstsize  The size of the destination buffer
 /// @return         The total length of the string IT TRIED to create (not the length of the string it actually created)
 ///                 If the return value is >= dstsize, the output string was truncated
-size_t strlcpy(char *dest, const char *src, size_t dstsize) {
-    size_t srclen = strlen(src);
+size_t my_strlcpy(char *dest, const char *src, size_t dstsize) {
+    size_t srclen = my_strlen(src);
     if (srclen + 1 < dstsize) {
-        fast_memcpy(dest, src, srclen + 1);
+        my_fast_memcpy(dest, src, srclen + 1);
     } else if (dstsize != 0) {
-        fast_memcpy(dest, src, dstsize - 1);
+        my_fast_memcpy(dest, src, dstsize - 1);
         dest[dstsize - 1] = '\0';
     }
     return srclen;

@@ -3,7 +3,7 @@
 /// @brief      Returns the length of the given string
 /// @param s    The string to be measured
 /// @return     The length of the string
-size_t strlen(const char *s)
+size_t my_strlen(const char *s)
 {
     size_t len = 0;
     while (*s++)
@@ -15,7 +15,7 @@ size_t strlen(const char *s)
 /// @param s        The string to be measured
 /// @param maxlen   The maximum length to be measured
 /// @return         The length of the string
-size_t strnlen(const char *s, size_t maxlen)
+size_t my_strnlen(const char *s, size_t maxlen)
 {
     size_t len = 0;
     while (len < maxlen && *s++)

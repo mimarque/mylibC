@@ -1,15 +1,15 @@
 #include <mylibc.h>
 
-long atol(const char *str) {
+long my_atol(const char *str) {
     long value = 0;
     int sign = 1;
     
-    while (isspace(*str))
+    while (my_isspace(*str))
         str++;
     if (*str == '-' || *str == '+')
         if (*str++ == '-')
             sign = -1;
-    while (*str && isdigit(*str)) {
+    while (*str && my_isdigit(*str)) {
         //if it could overflow clip to bonds of long
         if (value >= (LONG_MAX / 10) || value >= (-LONG_MIN / 10)){
             int digit = *str - '0';
@@ -26,8 +26,8 @@ long atol(const char *str) {
     return (value * sign);
 }
 
-int atoi(const char *str) {
-    long val = atol(str);
+int my_atoi(const char *str) {
+    long val = my_atol(str);
     //clip to bonds of int
     if (val > INT_MAX){
         return INT_MAX;
@@ -37,12 +37,12 @@ int atoi(const char *str) {
     return (int) val;
 }
 
-unsigned long atoul(const char *str) {
+unsigned long my_atoul(const char *str) {
     unsigned long value = 0;
     
-    while (isspace(*str))
+    while (my_isspace(*str))
         str++;
-    while (*str && isdigit(*str)) {
+    while (*str && my_isdigit(*str)) {
         //clip to bonds of long
         if (value >= ULONG_MAX / 10){
             if (value > (ULONG_MAX - (*str - '0')) / 10)
@@ -54,8 +54,8 @@ unsigned long atoul(const char *str) {
     return value;
 }
 
-unsigned int atoui(const char *str) {
-    unsigned long val = atoul(str);
+unsigned int my_atoui(const char *str) {
+    unsigned long val = my_atoul(str);
     //clip to bonds of int
     if (val > UINT_MAX)
        val = UINT_MAX;

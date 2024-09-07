@@ -1,6 +1,45 @@
 #include <stdio.h>
 
 int main(void) {
+    unsigned int x = 0x12345678;
+    unsigned char *byte = (unsigned char *)&x;
+    int test = -1;
+    size_t size = sizeof(int);
+    size_t index;
+
+    int is_little_endian = 0;
+    int is_ones_complement = 1;
+    int is_twos_complement = 1;
+
+    if (byte[0] == 0x78) {
+        printf("Little-endian\n");
+        is_little_endian = 1;
+    } else if (byte[0] == 0x12) {
+        printf("Big-endian\n");
+    } else {
+        printf("Unknown endianness\n");
+    }
+
+    byte = (unsigned char *)&test;
+
+    for (size_t i = 0; i < size; i++) {
+        index = is_little_endian ? i : size - 1 - i;
+        if (byte[index] != 0xFF) {
+            is_ones_complement = 0;
+        }
+        if (byte[index] != 0xFF && (i != size - 1 || byte[index] != 0xFE)) {
+            is_twos_complement = 0;
+        }
+    }
+
+    if (is_twos_complement) {
+        printf("Two's complement\n");
+    } else if (is_ones_complement) {
+        printf("One's complement\n");
+    } else {
+        printf("Normal binary or unknown representation\n");
+    }
+
     // Print sizes in bytes
     printf("Size of char:      %zu bytes (%zu bits)\n", sizeof(char), sizeof(char) * 8);
     printf("Size of short:     %zu bytes (%zu bits)\n", sizeof(short), sizeof(short) * 8);

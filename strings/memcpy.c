@@ -10,13 +10,15 @@ void *my_fast_memcpy(void *dest, const void *src, size_t n){
     char *d = (char *)dest;
     const char *s = (const char *)src;
     size_t t;
-    unsigned long wsize = sizeof(word);
-    unsigned long wmask = (wsize - 1);
+    uintptr_t d_ptr = (uintptr_t)d;
+    uintptr_t s_ptr = (uintptr_t)s;
+    size_t wsize = sizeof(word);
+    uintptr_t wmask = wsize - 1;
 
     if ((dest == NULL || src == NULL) || (dest == src || n == 0)) return;
     
-    if ((unsigned long)d < (unsigned long)s){ // No overlap
-        t = (unsigned long)s;
+    if (d_ptr < s_ptr) { // No overlap
+        t = s_ptr;
 
         // we want to copy the data in word size chunks so it's faster
         // however, we need to check if the source and destination are aligned to the word size
@@ -34,7 +36,7 @@ void *my_fast_memcpy(void *dest, const void *src, size_t n){
         // If the result is not zero, then the source and destination are not aligned to the word size
         // this works because the alignment works out to (address mod word size) = 0
         // same as ((s_address % wordsize) != 0 || (d_address % wordsize) != 0)
-        if ((t | (unsigned long)d) & wmask){
+        if ((t | d_ptr) & wmask) {
             // the XOR will return 0 if the source and destination bits are the same
             // if the soruce and destination are missaligned, ((t ^ d) & wmask) will return a non-zero value
             // XOR'ing the source and destination will give us the difference between the two addresses
@@ -50,7 +52,7 @@ void *my_fast_memcpy(void *dest, const void *src, size_t n){
             // n is length of the data to be copied if the length is less than the word size we can only copy byte by byte
             // if this condition is true, we can only copy byte by byte
             // same as ((t_address % wsize) != (d_address % wsize)) || n < wsize
-            if ((t ^ (unsigned long)d) & wmask || n < wsize){
+            if ((t ^ d_ptr) & wmask || n < wsize) {
                 t = n;
             } else { // if it is false, src and dest can be aligned easily or are aligned, we can copy the data in word size chunks
                 t = wsize - (t & wmask); // determine how many bytes to copy to align the source
@@ -63,15 +65,15 @@ void *my_fast_memcpy(void *dest, const void *src, size_t n){
             } while (--t); // --t > 0
         }
         t = n / wsize; // determine how many words to copy
-        if (t){
+        if (t) {
             do {
-                *(word *)d = *(word *)s; // cast the source and destination to word and copy the data
+                *(word *)d = *(const word *)s; // cast the source and destination to word and copy the data
                 d += wsize; // increment the destination by the word size note that the destination is a char pointer
                 s += wsize; // increment the source by the word size note that the source is a char pointer
             } while (--t); // --t > 0
         }
         t = n & wmask; // determine how many bytes are left to copy same as t = n % wsize
-        if (t){
+        if (t) {
             do {
                 *d++ = *s++; // copy the remaining bytes
             } while (--t); // --t > 0
@@ -80,9 +82,9 @@ void *my_fast_memcpy(void *dest, const void *src, size_t n){
         // basically the same as the above block but we copy from higher addresses to lower addresses
         s += n;
         d += n;
-        t = (unsigned long)s;
-        if ((t | (unsigned long)d) & wmask){
-            if ((t ^ (unsigned long)d) & wmask || n <= wsize){
+        t = s_ptr;
+        if ((t | d_ptr) & wmask) {
+            if ((t ^ d_ptr) & wmask || n <= wsize) {
                 t = n;
             } else {
                 t &= wmask;
@@ -93,20 +95,21 @@ void *my_fast_memcpy(void *dest, const void *src, size_t n){
             } while (--t);
         }
         t = n / wsize;
-        if (t){
+        if (t) {
             do {
                 d -= wsize;
                 s -= wsize;
-                *(word *)d = *(word *)s;
+                *(word *)d = *(const word *)s;
             } while (--t);
         }
         t = n & wmask;
-        if (t){
+        if (t) {
             do {
                 *--d = *--s;
             } while (--t);
         }
     }
+    return dest;
 }
 
 /// @brief          Copies n bytes from memory area src to memory area dest

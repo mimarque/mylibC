@@ -1,0 +1,51 @@
+my_split	- my_substr - my_calloc - my_memset
+						- my_fast_memcpy
+			- my_calloc - my_memset
+			- my_strlen
+my_strjoin	- my_fast_memcpy
+			- my_calloc - my_memset
+			- my_strlen
+my_strmapi	- my_calloc - my_memset
+			- my_strlen
+my_strtrim	- my_substr - my_calloc - my_memset
+						- my_fast_memcpy
+			- my_strchr
+			- my_strlen
+my_substr	- my_calloc - my_memset
+			- my_fast_memcpy
+		 
+
+my_calloc	- my_memset
+my_atoi		- my_isdigit
+			- my_isspace
+			
+			
+my_itoa		- my_count_digits
+my_uitoa	- my_count_digits			
+my_itoa_b	- my_count_digits_in_base
+my_uitoa_b	- my_count_digits_in_base
+		 
+		 
+my_strcat	- my_strlen
+			- my_fast_memcpy
+my_strdup	- my_strlen
+			- my_calloc - my_memset
+			- my_fast_memcpy
+my_strlcat	- my_strnlen
+			- my_strlen
+			- my_fast_memcpy
+my_strlcpy	- my_strlen
+			- my_fast_memcpy
+my_strndup	- my_strlen
+			- my_calloc - my_memset
+			- my_fast_memcpy
+my_strnstr	- my_strnlen
+			- my_memcmp
+my_strstr	- my_strlen
+			- my_memcmp
+		 
+		 
+my_bzero	- my_memset
+my_memmove	- my_fast_memcpy
+
+		 

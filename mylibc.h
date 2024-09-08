@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <limits.h>
 
+//ctype.h
 int my_isalnum(int c);
 int my_isalpha(int c);
 int my_isascii(int c);
@@ -73,6 +74,8 @@ char *my_strstr(const char *s, const char *find);
 
 
 //strings.h
+typedef long word;
+
 void my_bzero(void *s, size_t n);
 void *my_memccpy(void *dest, const void *src, int c, size_t n);
 void *my_memchr(const void *s, int c, size_t n);
@@ -82,5 +85,6 @@ void *my_fast_memcpy(void *dest, const void *src, size_t n);
 void *my_memmove(void *dest, const void *src, size_t num);
 void *my_memset(void *s, int c, size_t n);
 
+//s_linked_list.h
 
 #endif // MYLIBC_H
